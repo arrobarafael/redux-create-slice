@@ -2,12 +2,12 @@ const { createSlice } = require("@reduxjs/toolkit");
 
 const slice = createSlice({
   name: 'modal',
-  initialState: false,
+  initialState: true,
   reducers: {
     abrir: () => true,
     fechar: () => false
   }
 })
 
-const { abrir, fechar } = slice.actions;
+export const { abrir, fechar } = slice.actions;
 export default slice.reducer;
