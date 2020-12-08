@@ -1,86 +1,40 @@
-const { createSlice } = require("@reduxjs/toolkit");
+import { combineReducers } from "@reduxjs/toolkit";
+import createAsyncSlice from "./helper/createAsyncSlice";
 
-const slice = createSlice({
-  name: 'login',
-  initialState: {
-    token: {
-      loading: false,
-      data: null,
-      error: null
-    },
-    user: {
-      loading: false,
-      data: null,
-      error: null
-    }
-  },
-  reducers: {
-    fetchStarted(state){
-      state.token.loading = true;
-    },
-    fetchSuccess(state, action){
-      state.token.loading = false;
-      state.token.data = action.payload;
-      state.token.error = null
-    },
-    fetchError(state, action){
-      state.token.loading = false;
-      state.token.data = null;
-      state.token.error = action.payload
-    },
-    fetchUserStarted(state){
-      state.user.loading = true;
-    },
-    fetchUserSuccess(state, action){
-      state.user.loading = false;
-      state.user.data = action.payload;
-      state.user.error = null
-    },
-    fetchUserError(state, action){
-      state.user.loading = false;
-      state.user.data = null;
-      state.user.error = action.payload
-    }
-  }
-})
-
-export const { fetchStarted, fetchSuccess, fetchError} = slice.actions;
-export const { fetchUserStarted, fetchUserSuccess, fetchUserError} = slice.actions;
-
-export const fetchToken = (user) => async(dispatch) => {
-  try{
-    dispatch(fetchStarted());
-    const response = await fetch(`https://dogsapi.origamid.dev/json/jwt-auth/v1/token`, {
+const token = createAsyncSlice({
+  name: 'token',
+  fetchConfig: (user) => ({
+    url: `https://dogsapi.origamid.dev/json/jwt-auth/v1/token`,
+    options: {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(user)
-    });
-    const data = await response.json();
-    return dispatch(fetchSuccess(data));
-  }catch(error){
-    return dispatch(fetchError(error.message));
-  }
-}
+    }
+  })
+});
 
-
-export const fetchUser = (token) => async(dispatch) => {
-  console.log('foi aqui?');
-  try{
-    dispatch(fetchUserStarted());
-    const response = await fetch(`https://dogsapi.origamid.dev/json/api/user`, {
+const user = createAsyncSlice({
+  name: 'user',
+  fetchConfig: (token) => ({
+    url: `https://dogsapi.origamid.dev/json/api/user`,
+    options: {
       method: 'GET',
       headers: {
         'Authorization': 'Bearer '+token
       }
-    });
-    const data = await response.json();
-    return dispatch(fetchUserSuccess(data));
-  }catch(error){
-    return dispatch(fetchUserError(error.message));
-  }
-}
+    }
+  })
+})
+
+const fetchToken = token.asyncAction;
+const fetchUser = user.asyncAction;
+
+
+const reducer = combineReducers({token: token.reducer, user: user.reducer})
+export default reducer;
+
 
 export const login = (user) => async(dispatch) => {
   try{
@@ -93,4 +47,4 @@ export const login = (user) => async(dispatch) => {
 }
 
 
-export default slice.reducer;
+// export default slice.reducer;
