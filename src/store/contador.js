@@ -1,15 +1,19 @@
-const initialState = {
-  idade: 31,
-  nome: 'rafael'
-}
+import { createSlice } from "@reduxjs/toolkit";
 
-function contador(state = initialState, action){
-  switch(action.type){
-    case 'INCREMENTAR':
-      return state.idade + 1;
-    default:
-      return state;
+const slice = createSlice({
+  name: 'contador',
+  initialState: {
+    total: 10
+  },
+  reducers: {
+    incrementar(state) {
+      state.total = state.total + 10;
+    },
+    reduzir(state){
+      state.total = state.total - 10;
+    }
   }
-}
+})
 
-export default contador;
+export const {incrementar, reduzir} = slice.actions;
+export default slice.reducer;
