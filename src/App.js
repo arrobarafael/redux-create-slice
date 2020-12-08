@@ -1,7 +1,7 @@
 import  React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {incrementar, reduzir} from "./store/contador";
-import { fetchToken } from "./store/login";
+import { login } from "./store/login";
 import { abrir, fechar } from "./store/modal";
 
 function App() {
@@ -9,10 +9,13 @@ function App() {
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
 
+  const state = useSelector(state => state);
+  console.log(state);
+
   function handleSubmit(event){
     event.preventDefault();
     console.log('submeteu')
-    dispatch(fetchToken({username, password}));
+    dispatch(login({username, password}));
   }
 
   return (
@@ -34,6 +37,7 @@ function App() {
           onChange = {({target}) => setPassword(target.value)}
           />
           <button type = "submit">Enviar</button>
+          
       </form>
     </div>
   );
