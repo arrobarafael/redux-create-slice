@@ -1,23 +1,40 @@
+import  React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {incrementar, reduzir} from "./store/contador";
+import { fetchToken } from "./store/login";
 import { abrir, fechar } from "./store/modal";
 
 function App() {
-
-  const {contador, modal} = useSelector((state) => state);
+  const [username, setUserName ] = useState('');
+  const [password, setPassword] = useState('');
   const dispatch = useDispatch();
-  console.log(modal);
+
+  function handleSubmit(event){
+    event.preventDefault();
+    console.log('submeteu')
+    dispatch(fetchToken({username, password}));
+  }
+
   return (
-    <div className="App">
-      { modal && <h1>Valor: {contador.total}</h1>}
-      <div>
-        <button onClick = {() => dispatch(incrementar())}>Incrementar</button>
-        <button onClick = {() => dispatch(reduzir())}>Reduzir</button>
-      </div>
-      <div>
-        <button onClick = {() => dispatch(abrir())}>Abrir</button>
-        <button onClick = {() => dispatch(fechar())}>Fechar</button>
-      </div>
+    <div onSubmit = {handleSubmit}>
+      <form action="">
+        <label htmlFor="username" style = {{display: 'block'}} >Nome</label>
+        <input 
+          type="text" 
+          id = "username"
+          value = {username}
+          onChange = {({target}) => setUserName(target.value) }
+          
+          />
+        <label htmlFor="password" style = {{display: 'block'}}>Senha</label>
+        <input 
+          type="text" 
+          id = "password"
+          value = {password}
+          onChange = {({target}) => setPassword(target.value)}
+          />
+          <button type = "submit">Enviar</button>
+      </form>
     </div>
   );
 }
