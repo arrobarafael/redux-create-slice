@@ -3,13 +3,12 @@ import {incrementar, reduzir} from "./store/contador";
 
 function App() {
 
-  const state = useSelector((state) => state);
+  const {contador} = useSelector((state) => state);
   const dispatch = useDispatch();
-  console.log(state);
 
   return (
     <div className="App">
-      Valor: {state.total}
+      Valor: {contador.total}
       <div>
         <button onClick = {() => dispatch(incrementar())}>Incrementar</button>
         <button onClick = {() => dispatch(reduzir())}>Reduzir</button>
